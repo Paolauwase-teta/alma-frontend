@@ -93,7 +93,8 @@ export default function InventoryPage() {
             status: 'Fresh',
             temperature: Math.floor(Math.random() * 10) + 2,
             humidity: Math.floor(Math.random() * 20) + 60,
-            lastUpdate: new Date().toISOString()
+            gasLevel: 'Low',
+            timestamp: new Date().toISOString()
         };
         setInventory(prev => [newItem, ...prev]);
         setCurrentPage(1); // Go to first page to see new item
@@ -155,8 +156,8 @@ export default function InventoryPage() {
                     <button
                         onClick={handleFilterToggle}
                         className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${showFilter
-                                ? 'bg-gray-100 border-gray-300 text-gray-900'
-                                : 'text-gray-600 hover:bg-gray-50 border-gray-200'
+                            ? 'bg-gray-100 border-gray-300 text-gray-900'
+                            : 'text-gray-600 hover:bg-gray-50 border-gray-200'
                             }`}
                     >
                         <Filter size={18} />
@@ -323,8 +324,8 @@ export default function InventoryPage() {
                                     key={page}
                                     onClick={() => handlePageChange(page)}
                                     className={`px-3 py-1 rounded text-sm transition-colors ${currentPage === page
-                                            ? 'bg-[#4a7c59] text-white'
-                                            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+                                        ? 'bg-[#4a7c59] text-white'
+                                        : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
                                         }`}
                                 >
                                     {page}
