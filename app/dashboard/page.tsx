@@ -5,64 +5,81 @@ import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts';
 import {
-    ArrowUpRight, ArrowDownRight, Package, Eye, MousePointer, Thermometer, ChevronDown, CheckCircle2
+    ArrowUpRight, ArrowDownRight, Package, Eye, MousePointer, Thermometer, ChevronDown, CheckCircle2, RefreshCw, TrendingUp
 } from 'lucide-react';
 import { SensorData, Alert } from '@/app/lib/data';
 import Toast, { ToastType } from '@/app/components/Toast';
 
-const trafficData = [
-    { day: 'Mon', visitors: 3200 },
-    { day: 'Tue', visitors: 4100 },
-    { day: 'Wed', visitors: 3800 },
-    { day: 'Thu', visitors: 5200 },
-    { day: 'Fri', visitors: 6478 },
-    { day: 'Sat', visitors: 5800 },
-    { day: 'Sun', visitors: 4900 },
-];
+const generateTrafficData = (days: number) => {
+    const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return Array.from({ length: days }, (_, i) => ({
+        day: days === 7 ? dayNames[i] : `Day ${i + 1}`,
+        visitors: Math.floor(Math.random() * 4000) + 2000
+    }));
+};
 
-const peakHoursData = [
-    { hour: '9am', value: 1200 },
-    { hour: '10am', value: 2400 },
-    { hour: '11am', value: 1800 },
-    { hour: '12pm', value: 3200 },
-    { hour: '1pm', value: 2800 },
-    { hour: '2pm', value: 2200 },
-    { hour: '3pm', value: 1600 },
-];
+const generatePeakHoursData = () => {
+    const hours = ['9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm'];
+    return hours.map(hour => ({
+        hour,
+        value: Math.floor(Math.random() * 2500) + 1000
+    }));
+};
 
 export default function DashboardPage() {
     const [sensors, setSensors] = useState<SensorData[]>([]);
     const [alerts, setAlerts] = useState<Alert[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [timeRange, setTimeRange] = useState('Last 7 days');
+    const [timeRange, setTimeRange] = useState<'7days' | '30days'>('7days');
     const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+    const [trafficData, setTrafficData] = useState(generateTrafficData(7));
+    const [peakHoursData, setPeakHoursData] = useState(generatePeakHoursData());
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [sensorsRes, alertsRes] = await Promise.all([
-                    fetch('/api/sensors'),
-                    fetch('/api/alerts')
-                ]);
-                const sensorsData = await sensorsRes.json();
-                const alertsData = await alertsRes.json();
-                setSensors(sensorsData);
-                setAlerts(alertsData);
-            } catch (error) {
-                console.error("Error fetching dashboard data:", error);
-                setToast({ message: "Failed to load dashboard data", type: 'error' });
-            } finally {
-                setIsLoading(false);
-            }
-        };
         fetchData();
     }, []);
 
+    const fetchData = async () => {
+        try {
+            const [sensorsRes, alertsRes] = await Promise.all([
+                fetch('/api/sensors'),
+                fetch('/api/alerts')
+            ]);
+            const sensorsData = await sensorsRes.json();
+            const alertsData = await alertsRes.json();
+            setSensors(sensorsData);
+            setAlerts(alertsData);
+        } catch (error) {
+            console.error("Error fetching dashboard data:", error);
+            setToast({ message: "Failed to load dashboard data", type: 'error' });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleTimeRangeChange = () => {
-        const newRange = timeRange === 'Last 7 days' ? 'Last 30 days' : 'Last 7 days';
+        const newRange = timeRange === '7days' ? '30days' : '7days';
         setTimeRange(newRange);
-        setToast({ message: `Updated view to ${newRange}`, type: 'success' });
-    }
+        setTrafficData(generateTrafficData(newRange === '7days' ? 7 : 30));
+        setPeakHoursData(generatePeakHoursData());
+        setToast({ message: `Viewing ${newRange === '7days' ? 'Last 7 days' : 'Last 30 days'}`, type: 'success' });
+    };
+
+    const handleRefresh = async () => {
+        setIsRefreshing(true);
+        setToast({ message: "Refreshing data...", type: 'info' });
+
+        // Simulate data refresh
+        await fetchData();
+        setTrafficData(generateTrafficData(timeRange === '7days' ? 7 : 30));
+        setPeakHoursData(generatePeakHoursData());
+
+        setTimeout(() => {
+            setIsRefreshing(false);
+            setToast({ message: "Data refreshed successfully", type: 'success' });
+        }, 1000);
+    };
 
     const stats = {
         totalNodes: sensors.length,
@@ -70,6 +87,9 @@ export default function DashboardPage() {
         atRisk: sensors.filter(s => s.status === 'At Risk').length,
         avgTemp: sensors.length > 0 ? (sensors.reduce((acc, s) => acc + s.temperature, 0) / sensors.length).toFixed(1) : '0',
     };
+
+    const totalVisitors = trafficData.reduce((sum, day) => sum + day.visitors, 0);
+    const avgVisitors = Math.floor(totalVisitors / trafficData.length);
 
     if (isLoading) {
         return (
@@ -86,14 +106,30 @@ export default function DashboardPage() {
         <div className="space-y-6 animate-fade-in">
             {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
+            {/* Header with Refresh */}
+            <div className="flex justify-between items-center">
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Dashboard Overview</h2>
+                    <p className="text-gray-500 text-sm">Real-time monitoring and analytics</p>
+                </div>
+                <button
+                    onClick={handleRefresh}
+                    disabled={isRefreshing}
+                    className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                >
+                    <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+                    Refresh
+                </button>
+            </div>
+
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* Total Nodes */}
-                <div className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-transform hover:-translate-y-1 duration-300">
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1 duration-300 cursor-pointer">
                     <div className="flex items-center justify-between mb-4">
                         <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
                             <Package size={24} className="text-orange-500" />
                         </div>
+                        <span className="text-xs font-bold text-orange-500 bg-orange-50 px-2 py-1 rounded-full">LIVE</span>
                     </div>
                     <p className="text-sm text-gray-500 mb-1">Total Nodes</p>
                     <p className="text-3xl font-bold text-gray-900 mb-2">{stats.totalNodes}</p>
@@ -104,51 +140,49 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Fresh Stock */}
-                <div className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-transform hover:-translate-y-1 duration-300">
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1 duration-300 cursor-pointer">
                     <div className="flex items-center justify-between mb-4">
                         <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
                             <Eye size={24} className="text-blue-500" />
                         </div>
+                        <span className="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-full">ACTIVE</span>
                     </div>
                     <p className="text-sm text-gray-500 mb-1">Fresh Stock</p>
                     <p className="text-3xl font-bold text-gray-900 mb-2">{stats.fresh}</p>
                     <div className="flex items-center gap-1 text-sm bg-green-50 w-fit px-2 py-1 rounded-lg">
-                        <ArrowUpRight size={16} className="text-green-600" />
-                        <span className="text-green-600 font-bold">5.9%</span>
-                        <span className="text-gray-500 text-xs">vs last month</span>
+                        <TrendingUp size={16} className="text-green-600" />
+                        <span className="text-green-600 font-bold">{((stats.fresh / stats.totalNodes) * 100).toFixed(1)}%</span>
+                        <span className="text-gray-500 text-xs">of total</span>
                     </div>
                 </div>
 
-                {/* At Risk */}
-                <div className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-transform hover:-translate-y-1 duration-300">
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1 duration-300 cursor-pointer">
                     <div className="flex items-center justify-between mb-4">
                         <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
                             <MousePointer size={24} className="text-green-500" />
                         </div>
+                        <span className="text-xs font-bold text-orange-500 bg-orange-50 px-2 py-1 rounded-full">ALERT</span>
                     </div>
                     <p className="text-sm text-gray-500 mb-1">At Risk Items</p>
                     <p className="text-3xl font-bold text-gray-900 mb-2">{stats.atRisk}</p>
-                    <div className="flex items-center gap-1 text-sm bg-red-50 w-fit px-2 py-1 rounded-lg">
-                        <ArrowDownRight size={16} className="text-red-500" />
-                        <span className="text-red-500 font-bold">2.1%</span>
-                        <span className="text-gray-500 text-xs">vs last quarter</span>
+                    <div className="flex items-center gap-1 text-sm bg-orange-50 w-fit px-2 py-1 rounded-lg">
+                        <ArrowDownRight size={16} className="text-orange-500" />
+                        <span className="text-orange-500 font-bold">Needs attention</span>
                     </div>
                 </div>
 
-                {/* Avg Temperature */}
-                <div className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-transform hover:-translate-y-1 duration-300">
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1 duration-300 cursor-pointer">
                     <div className="flex items-center justify-between mb-4">
                         <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center">
                             <Thermometer size={24} className="text-purple-500" />
                         </div>
+                        <span className="text-xs font-bold text-purple-500 bg-purple-50 px-2 py-1 rounded-full">AVG</span>
                     </div>
                     <p className="text-sm text-gray-500 mb-1">Avg Temperature</p>
                     <p className="text-3xl font-bold text-gray-900 mb-2">{stats.avgTemp}°C</p>
                     <div className="flex items-center gap-1 text-sm bg-purple-50 w-fit px-2 py-1 rounded-lg">
                         <CheckCircle2 size={16} className="text-purple-600" />
                         <span className="text-purple-600 font-bold">Optimal</span>
-                        <span className="text-gray-500 text-xs">range</span>
                     </div>
                 </div>
             </div>
@@ -164,18 +198,18 @@ export default function DashboardPage() {
                         </div>
                         <button
                             onClick={handleTimeRangeChange}
-                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors border border-gray-200"
+                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors border border-gray-200 active:scale-95"
                         >
-                            {timeRange}
+                            {timeRange === '7days' ? 'Last 7 days' : 'Last 30 days'}
                             <ChevronDown size={16} />
                         </button>
                     </div>
                     <div className="mb-4">
-                        <p className="text-3xl font-bold text-gray-900">6,478</p>
+                        <p className="text-3xl font-bold text-gray-900">{avgVisitors.toLocaleString()}</p>
                         <div className="flex items-center gap-1 text-sm mt-1">
                             <ArrowUpRight size={16} className="text-green-500" />
                             <span className="text-green-500 font-semibold">15%</span>
-                            <span className="text-gray-400">increase in logic calls</span>
+                            <span className="text-gray-400">average daily calls</span>
                         </div>
                     </div>
                     <div className="h-64">
@@ -207,14 +241,14 @@ export default function DashboardPage() {
                         </div>
                         <button
                             onClick={handleTimeRangeChange}
-                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors border border-gray-200"
+                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors border border-gray-200 active:scale-95"
                         >
-                            {timeRange}
+                            {timeRange === '7days' ? 'Last 7 days' : 'Last 30 days'}
                             <ChevronDown size={16} />
                         </button>
                     </div>
                     <div className="mb-4">
-                        <p className="text-3xl font-bold text-gray-900">4,231</p>
+                        <p className="text-3xl font-bold text-gray-900">{Math.max(...peakHoursData.map(d => d.value)).toLocaleString()}</p>
                         <p className="text-sm text-gray-500 mt-1">requests in peak hour</p>
                     </div>
                     <div className="h-64">
@@ -245,9 +279,9 @@ export default function DashboardPage() {
                     <h3 className="text-lg font-bold text-gray-900">Storage Locations</h3>
                     <button
                         onClick={handleTimeRangeChange}
-                        className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors border border-gray-200"
+                        className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors border border-gray-200 active:scale-95"
                     >
-                        {timeRange}
+                        {timeRange === '7days' ? 'Last 7 days' : 'Last 30 days'}
                         <ChevronDown size={16} />
                     </button>
                 </div>
@@ -266,7 +300,7 @@ export default function DashboardPage() {
                                 <tr key={sensor.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer">
                                     <td className="py-4 px-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                                             <span className="font-medium text-gray-900">{sensor.name}</span>
                                         </div>
                                     </td>
@@ -278,7 +312,7 @@ export default function DashboardPage() {
                                             {sensor.status}
                                         </span>
                                     </td>
-                                    <td className="py-4 px-4 text-gray-600">{sensor.temperature}°C</td>
+                                    <td className="py-4 px-4 text-gray-600 font-medium">{sensor.temperature}°C</td>
                                     <td className="py-4 px-4 text-gray-600">{sensor.humidity}%</td>
                                 </tr>
                             ))}
