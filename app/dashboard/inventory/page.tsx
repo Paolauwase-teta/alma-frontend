@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Package, Search, Filter, Plus, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Package, Search, Filter, Plus, MoreVertical, ChevronLeft, ChevronRight, ArrowUpDown, Trash2, Edit } from 'lucide-react';
 import { SensorData } from '@/app/lib/data';
 import Toast, { ToastType } from '@/app/components/Toast';
 
@@ -10,6 +10,12 @@ export default function InventoryPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [showFilter, setShowFilter] = useState(false);
+    const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [typeFilter, setTypeFilter] = useState<string>('all');
+    const [sortField, setSortField] = useState<'name' | 'temperature' | 'humidity'>('name');
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(5);
     const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
     useEffect(() => {
@@ -28,24 +34,79 @@ export default function InventoryPage() {
         fetchInventory();
     }, []);
 
-    const filteredInventory = inventory.filter(item =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.type.toLowerCase().includes(searchTerm.toLowerCase())
+    // Real filtering and sorting logic
+    const filteredAndSortedInventory = useMemo(() => {
+        let filtered = inventory.filter(item => {
+            const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.type.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
+            const matchesType = typeFilter === 'all' || item.type === typeFilter;
+            return matchesSearch && matchesStatus && matchesType;
+        });
+
+        // Sort
+        filtered.sort((a, b) => {
+            let aVal = a[sortField];
+            let bVal = b[sortField];
+
+            if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+            if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+
+            if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+            if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        return filtered;
+    }, [inventory, searchTerm, statusFilter, typeFilter, sortField, sortDirection]);
+
+    // Pagination
+    const totalPages = Math.ceil(filteredAndSortedInventory.length / itemsPerPage);
+    const paginatedInventory = filteredAndSortedInventory.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
     );
 
+    const handleSort = (field: 'name' | 'temperature' | 'humidity') => {
+        if (sortField === field) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortDirection('asc');
+        }
+    };
+
+    const handleDeleteItem = (id: string, name: string) => {
+        setInventory(prev => prev.filter(item => item.id !== id));
+        setToast({ message: `Deleted ${name}`, type: 'success' });
+        // Reset to page 1 if current page is now empty
+        if (paginatedInventory.length === 1 && currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
     const handleAddItem = () => {
-        // Simulate adding item
-        setToast({ message: "Opening 'Add Item' modal...", type: 'info' });
+        const newItem: SensorData = {
+            id: `new-${Date.now()}`,
+            name: `Storage Unit ${inventory.length + 1}`,
+            type: 'Warehouse',
+            status: 'Fresh',
+            temperature: Math.floor(Math.random() * 10) + 2,
+            humidity: Math.floor(Math.random() * 20) + 60,
+            lastUpdate: new Date().toISOString()
+        };
+        setInventory(prev => [newItem, ...prev]);
+        setCurrentPage(1); // Go to first page to see new item
+        setToast({ message: "New item added successfully!", type: 'success' });
     };
 
     const handleFilterToggle = () => {
         setShowFilter(!showFilter);
-        setToast({ message: showFilter ? "Filters hidden" : "Filters shown", type: 'info' });
     };
 
-    const handleAction = (id: string) => {
-        setToast({ message: `Managing item #${id.substring(0, 8)}`, type: 'info' });
-    }
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
 
     if (isLoading) {
         return (
@@ -83,7 +144,10 @@ export default function InventoryPage() {
                         <input
                             type="text"
                             value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setCurrentPage(1); // Reset to first page on search
+                            }}
                             placeholder="Search inventory..."
                             className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#4a7c59] focus:bg-white transition-colors"
                         />
@@ -103,17 +167,31 @@ export default function InventoryPage() {
                 {showFilter && (
                     <div className="p-4 bg-gray-50 border-b border-gray-100 animate-slide-up">
                         <div className="flex gap-4">
-                            <select className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-[#4a7c59]">
-                                <option>All Statuses</option>
-                                <option>Fresh</option>
-                                <option>At Risk</option>
-                                <option>Spoiled</option>
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => {
+                                    setStatusFilter(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                                className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-[#4a7c59]"
+                            >
+                                <option value="all">All Statuses</option>
+                                <option value="Fresh">Fresh</option>
+                                <option value="At Risk">At Risk</option>
+                                <option value="Spoiled">Spoiled</option>
                             </select>
-                            <select className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-[#4a7c59]">
-                                <option>All Types</option>
-                                <option>Warehouse</option>
-                                <option>Transport</option>
-                                <option>Retail</option>
+                            <select
+                                value={typeFilter}
+                                onChange={(e) => {
+                                    setTypeFilter(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                                className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-[#4a7c59]"
+                            >
+                                <option value="all">All Types</option>
+                                <option value="Warehouse">Warehouse</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Retail">Retail</option>
                             </select>
                         </div>
                     </div>
@@ -123,18 +201,42 @@ export default function InventoryPage() {
                     <table className="w-full">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="text-left py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Item Name</th>
+                                <th className="text-left py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    <button
+                                        onClick={() => handleSort('name')}
+                                        className="flex items-center gap-1 hover:text-gray-700 transition-colors"
+                                    >
+                                        Item Name
+                                        <ArrowUpDown size={14} className={sortField === 'name' ? 'text-[#4a7c59]' : ''} />
+                                    </button>
+                                </th>
                                 <th className="text-left py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Storage ID</th>
                                 <th className="text-left py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="text-left py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Temp</th>
-                                <th className="text-left py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Humidity</th>
+                                <th className="text-left py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    <button
+                                        onClick={() => handleSort('temperature')}
+                                        className="flex items-center gap-1 hover:text-gray-700 transition-colors"
+                                    >
+                                        Temp
+                                        <ArrowUpDown size={14} className={sortField === 'temperature' ? 'text-[#4a7c59]' : ''} />
+                                    </button>
+                                </th>
+                                <th className="text-left py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    <button
+                                        onClick={() => handleSort('humidity')}
+                                        className="flex items-center gap-1 hover:text-gray-700 transition-colors"
+                                    >
+                                        Humidity
+                                        <ArrowUpDown size={14} className={sortField === 'humidity' ? 'text-[#4a7c59]' : ''} />
+                                    </button>
+                                </th>
                                 <th className="text-left py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Last Update</th>
                                 <th className="text-right py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
-                            {filteredInventory.length > 0 ? (
-                                filteredInventory.map((item) => (
+                            {paginatedInventory.length > 0 ? (
+                                paginatedInventory.map((item) => (
                                     <tr key={item.id} className="hover:bg-gray-50 transition-colors group">
                                         <td className="py-4 px-6">
                                             <div className="flex items-center gap-3">
@@ -172,19 +274,29 @@ export default function InventoryPage() {
                                             2 mins ago
                                         </td>
                                         <td className="py-4 px-6 text-right">
-                                            <button
-                                                onClick={() => handleAction(item.id)}
-                                                className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full"
-                                            >
-                                                <MoreVertical size={20} />
-                                            </button>
+                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button
+                                                    onClick={() => setToast({ message: `Editing ${item.name}`, type: 'info' })}
+                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <Edit size={16} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteItem(item.id, item.name)}
+                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="Delete"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
                                     <td colSpan={7} className="py-12 text-center text-gray-500">
-                                        No items found matching "{searchTerm}"
+                                        No items found matching your filters
                                     </td>
                                 </tr>
                             )}
@@ -193,17 +305,36 @@ export default function InventoryPage() {
                 </div>
 
                 <div className="p-4 border-t border-gray-100 flex justify-between items-center bg-gray-50">
-                    <p className="text-sm text-gray-500">Showing {filteredInventory.length} items</p>
+                    <p className="text-sm text-gray-500">
+                        Showing {paginatedInventory.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} to {Math.min(currentPage * itemsPerPage, filteredAndSortedInventory.length)} of {filteredAndSortedInventory.length} items
+                    </p>
                     <div className="flex gap-2">
                         <button
-                            className="flex items-center gap-1 px-3 py-1 border border-gray-200 rounded bg-white text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-colors"
-                            disabled
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="flex items-center gap-1 px-3 py-1 border border-gray-200 rounded bg-white text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             <ChevronLeft size={16} />
                             Previous
                         </button>
+                        <div className="flex items-center gap-1">
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                <button
+                                    key={page}
+                                    onClick={() => handlePageChange(page)}
+                                    className={`px-3 py-1 rounded text-sm transition-colors ${currentPage === page
+                                            ? 'bg-[#4a7c59] text-white'
+                                            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+                                        }`}
+                                >
+                                    {page}
+                                </button>
+                            ))}
+                        </div>
                         <button
-                            className="flex items-center gap-1 px-3 py-1 border border-gray-200 rounded bg-white text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-colors"
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="flex items-center gap-1 px-3 py-1 border border-gray-200 rounded bg-white text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             Next
                             <ChevronRight size={16} />
