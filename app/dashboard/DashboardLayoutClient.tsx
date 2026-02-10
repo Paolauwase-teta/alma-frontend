@@ -98,22 +98,31 @@ export default function DashboardLayoutClient({ children }: { children: React.Re
                             })}
                         </div>
 
+
                         <p className="px-3 mt-8 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Settings</p>
                         <div className="space-y-1">
-                            <button
-                                onClick={() => handleFeatureClick('Settings')}
-                                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                            <Link
+                                href="/dashboard/settings"
+                                onClick={() => setSidebarOpen(false)}
+                                className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${pathname === '/dashboard/settings'
+                                        ? 'bg-[#4a7c59] text-white shadow-md shadow-[#4a7c59]/20'
+                                        : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
                             >
                                 <Settings size={20} />
                                 Settings
-                            </button>
-                            <button
-                                onClick={() => handleFeatureClick('Help Center')}
-                                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                            </Link>
+                            <Link
+                                href="/dashboard/help"
+                                onClick={() => setSidebarOpen(false)}
+                                className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${pathname === '/dashboard/help'
+                                        ? 'bg-[#4a7c59] text-white shadow-md shadow-[#4a7c59]/20'
+                                        : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
                             >
                                 <HelpCircle size={20} />
                                 Help Center
-                            </button>
+                            </Link>
                         </div>
                     </nav>
 
