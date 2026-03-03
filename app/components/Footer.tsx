@@ -6,9 +6,9 @@ import { Instagram, Facebook, Linkedin, Twitter, Mail } from 'lucide-react';
 export default function Footer() {
     return (
         <footer className="relative bg-white pt-32 pb-12 overflow-hidden border-t border-slate-100 font-[family-name:var(--font-jost)]">
-            {/* Massive Background Text - Visible but Subtle */}
+            {/* Massive Background Text - Highly Visible Watermark */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0">
-                <span className="text-[35vw] font-black text-slate-50 leading-none tracking-tighter uppercase opacity-100">
+                <span className="text-[35vw] font-black text-slate-200 opacity-40 leading-none tracking-tighter uppercase">
                     ALMA
                 </span>
             </div>
@@ -21,7 +21,7 @@ export default function Footer() {
                             <h2 className="text-2xl font-black text-green-600 tracking-tighter uppercase">
                                 ALMA AGRICULTURE
                             </h2>
-                            <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-cyan-500/80">
+                            <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-slate-900">
                                 FRESHNESS - QUALITY - SUSTAINABILITY
                             </p>
                         </div>
