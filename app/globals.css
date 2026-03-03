@@ -1,10 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #15803d; /* Rich Green */
+  --primary: #15803d;
+  /* Rich Green */
   --primary-light: #22c55e;
   --primary-dark: #14532d;
-  --accent: #f97316; /* Orange accent */
+  --accent: #f97316;
+  /* Orange accent */
   --background: #ffffff;
   --foreground: #1c1c1c;
   --card: #f8fafc;

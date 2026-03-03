@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import LayoutWrapper from "@/app/components/LayoutWrapper";
 
-// Using native font loading if available, or relying on globals.css for now
-// Assuming fonts are handled in globals.css or previous context
+import { Jost } from "next/font/google";
+
+const jost = Jost({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-jost",
+});
 
 export const metadata: Metadata = {
   title: "ALMA | From Farm to Fork - Food Spoilage Detection",
@@ -16,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={jost.variable}>
       <body>
         <LayoutWrapper>
           {children}
