@@ -254,8 +254,8 @@ export default function DashboardPage() {
                 <div className="bg-[var(--card)] rounded-[32px] p-8 border border-[var(--border)] shadow-sm">
                     <div className="flex items-center justify-between mb-8">
                         <div>
-                            <h3 className="text-xl font-black text-[var(--foreground)] tracking-tight">System Performance</h3>
-                            <p className="text-sm text-[var(--muted-foreground)] font-medium">Hourly request distribution</p>
+                            <h3 className="text-xl font-black text-[var(--foreground)] tracking-tight">Molecular Freshness Trend</h3>
+                            <p className="text-sm text-[var(--muted-foreground)] font-medium">VOC concentration monitoring across all nodes</p>
                         </div>
                         <button
                             onClick={handleTimeRangeChange}

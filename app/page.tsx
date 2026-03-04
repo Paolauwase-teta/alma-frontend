@@ -13,15 +13,15 @@ export default function HomePage() {
         </span>
       </div>
 
-      {/* Hero Section - Centered, Dark Green & Transparent */}
-      <section className="relative min-h-[70vh] flex items-center justify-center px-6 pt-20 text-center">
-        <div className="absolute inset-0 bg-[#0a1a14] overflow-hidden">
+      {/* Hero Section - Deep Solid Forest Green */}
+      <section className="relative min-h-[75vh] flex items-center justify-center px-6 pt-20 text-center">
+        <div className="absolute inset-0 bg-[#0a2118] overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2672&auto=format&fit=crop"
+            src="/hero.png"
             alt="Farm Hero"
-            className="w-full h-full object-cover opacity-40 grayscale"
+            className="w-full h-full object-cover opacity-30 mix-blend-multiply"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a1a14]/60 via-[#0a1a14]/90 to-[#0a1a14]"></div>
+          <div className="absolute inset-0 bg-[#0a2118]/60"></div>
         </div>
 
         <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col items-center">
@@ -80,25 +80,25 @@ export default function HomePage() {
                 {
                   title: "Smart Storage Monitoring",
                   desc: "Precision sensors for molecular freshness tracking at origin farms.",
-                  img: "/smart_storage_monitoring_circle_1772605733041.png",
+                  img: "/smart_storage.png",
                   y: "lg:translate-y-[80px]"
                 },
                 {
                   title: "Food Delivery Tracking",
                   desc: "Active condition monitoring during transit phases. Blockchain-powered security.",
-                  img: "/food_delivery_tracking_circle_1772605784233.png",
+                  img: "/smart_logistics.png",
                   y: "lg:translate-y-[210px]"
                 },
                 {
                   title: "Household Management",
                   desc: "Bringing molecular intelligence to every home kitchen for zero waste.",
-                  img: "/household_management_circle_1772605832413.png",
+                  img: "/smart_kitchen.png",
                   y: "lg:translate-y-[10px]"
                 },
                 {
                   title: "Food Donation System",
                   desc: "Bridging the gap securely between surplus inventory and community needs.",
-                  img: "/food_donation_system_circle_1772605885984.png",
+                  img: "/food_donation.png",
                   y: "lg:translate-y-[160px]"
                 }
               ].map((s, i) => (
@@ -121,6 +121,36 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Live System Stats - Dummy Test Data Section */}
+      <section className="px-6 py-20 bg-[#0a1a14] text-white overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+          <div className="grid grid-cols-12 h-full">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="border-r border-white/20 h-full"></div>
+            ))}
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+            {[
+              { label: "Active Sensors", value: "14,822", trend: "+12%" },
+              { label: "Food Saved (Tons)", value: "2,490", trend: "+8%" },
+              { label: "Active Partners", value: "842", trend: "+24%" },
+              { label: "Blockchain Nodes", value: "156", trend: "Stable" }
+            ].map((stat, i) => (
+              <div key={i} className="space-y-4">
+                <p className="text-[10px] font-black text-green-500 uppercase tracking-[0.4em]">{stat.label}</p>
+                <h4 className="text-4xl md:text-5xl font-black tracking-tighter tabular-nums">{stat.value}</h4>
+                <div className="inline-flex items-center px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                  {stat.trend}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

@@ -44,30 +44,47 @@ export default function Chatbot() {
         };
 
         setMessages(prev => [...prev, newUserMessage]);
+        const query = inputText.toLowerCase();
         setInputText('');
         setIsTyping(true);
 
-        // Simulate AI response
+        // Simulate AI response with matching logic
         setTimeout(() => {
-            const botResponses = [
-                "That's a great question about supply chain optimization. Our blockchain-verified data ensures 100% transparency.",
-                "Based on your query, ALMA's predictive models suggest a 30% reduction in spoilage for that category.",
-                "I can certainly help with that. Our molecular sensors provide real-time data to prevent food waste.",
-                "Excellent point. ALMA leverages advanced AI to predict freshness windows with 94% accuracy.",
-                "Would you like to see a demo of our dashboard? It connects all your logistical nodes in one view."
-            ];
-            const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
+            let response = "";
+
+            if (query.includes("what is alma")) {
+                response = "ALMA is a cutting-edge food management ecosystem that combines molecular intelligence, IoT sensors, and blockchain technology to eliminate food waste from farm to fork.";
+            } else if (query.includes("problem") || query.includes("solve")) {
+                response = "We tackle the global 1.3 billion ton food waste crisis. Specifically, we solve the 'invisible' spoilage problem where food looks fine but is degrading at a molecular level, and we bridge the gap between surplus and community need.";
+            } else if (query.includes("feature")) {
+                response = "Our key features include: 1. Molecular Freshness Sensors (tracking VOCs), 2. Live Blockchain Ledger (for transparency), 3. AI Predictive Analytics (forecasting exact spoilage windows), and 4. Smart USSD Alerts for farmers.";
+            } else if (query.includes("service")) {
+                response = "We provide four core services: Smart Storage Monitoring for farms, Food Delivery Tracking for logistics, Household Prep-smart Management, and an automated Food Donation System.";
+            } else if (query.includes("post storage") || query.includes("prevent")) {
+                response = "We prevent storage loss by monitoring Volatile Organic Compounds (VOCs). Traditional sensors only check temp/humidity, but ALMA 'smells' the food ripening or degrading days before physical signs appear, triggering instant alerts to move the product.";
+            } else if (query.includes("better") || query.includes("traditional")) {
+                response = "Traditional methods are reactive (throwing food away after it smells bad). ALMA is proactive. We use molecular data to give food a 'digital life' and transparency that old-school cold storage simply cannot match.";
+            } else {
+                const genericResponses = [
+                    "That's a great question. Our blockchain-verified data ensures 100% transparency in the supply chain.",
+                    "Based on global metrics, ALMA's predictive models typically reduce spoilage by up to 30%.",
+                    "I can certainly help with that. Our molecular sensors provide real-time data to prevent food waste.",
+                    "Excellent point. ALMA leverages advanced AI to predict freshness windows with 94% accuracy.",
+                    "Would you like to see a demo of our analytics dashboard? It connects all your logistical nodes in one view."
+                ];
+                response = genericResponses[Math.floor(Math.random() * genericResponses.length)];
+            }
 
             const newBotMessage: Message = {
                 id: (Date.now() + 1).toString(),
-                text: randomResponse,
+                text: response,
                 sender: 'bot',
                 timestamp: new Date()
             };
 
             setMessages(prev => [...prev, newBotMessage]);
             setIsTyping(false);
-        }, 1500);
+        }, 1200);
     };
 
     return (
@@ -76,8 +93,8 @@ export default function Chatbot() {
             <button
                 onClick={() => setIsOpen(prev => !prev)}
                 className={`fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 ${isOpen
-                        ? 'bg-red-500 rotate-90'
-                        : 'bg-[#4a7c59] animate-bounce'
+                    ? 'bg-red-500 rotate-90'
+                    : 'bg-[#4a7c59] animate-bounce'
                     }`}
             >
                 {isOpen ? (
@@ -118,8 +135,8 @@ export default function Chatbot() {
                                     </div>
                                     <div
                                         className={`p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.sender === 'user'
-                                                ? 'bg-[#1a3a2e] text-white rounded-br-none'
-                                                : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'
+                                            ? 'bg-[#1a3a2e] text-white rounded-br-none'
+                                            : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'
                                             }`}
                                     >
                                         {msg.text}

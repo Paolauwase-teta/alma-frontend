@@ -5,14 +5,14 @@ import { useState } from 'react';
 import Toast, { ToastType } from '@/app/components/Toast';
 
 const internalTeam = [
-    { id: 1, name: 'Alice Johnson', role: 'Operations Manager', email: 'alice@alma.com', phone: '+250 788 000 001', image: 'https://i.pravatar.cc/150?u=alice', level: 'Admin' },
-    { id: 2, name: 'Bob Smith', role: 'Warehouse Lead', email: 'bob@alma.com', phone: '+250 788 000 002', image: 'https://i.pravatar.cc/150?u=bob', level: 'Editor' },
-    { id: 3, name: 'Charlie Brown', role: 'Data Analyst', email: 'charlie@alma.com', phone: '+250 788 000 003', image: 'https://i.pravatar.cc/150?u=charlie', level: 'Viewer' },
+    { id: 1, name: 'Alice Johnson', role: 'Operations Manager', email: 'alice@alma.com', phone: '+250 788 000 001', image: '/alice.png', level: 'Admin' },
+    { id: 2, name: 'Bob Smith', role: 'Warehouse Lead', email: 'bob@alma.com', phone: '+250 788 000 002', image: '/bob.png', level: 'Editor' },
+    { id: 3, name: 'Charlie Brown', role: 'Data Analyst', email: 'charlie@alma.com', phone: '+250 788 000 003', image: '/charlie.png', level: 'Viewer' },
 ];
 
 const partnerContacts = [
-    { id: 4, name: 'Jean Pierre', role: 'Simba Procurement', email: 'jp.procure@simba.com', phone: '+250 788 111 222', image: 'https://i.pravatar.cc/150?u=jp', company: 'Simba SuperMarket' },
-    { id: 5, name: 'Marie Mutoni', role: 'Simba Quality Control', email: 'm.mutoni@simba.com', phone: '+250 788 333 444', image: 'https://i.pravatar.cc/150?u=marie', company: 'Simba SuperMarket' },
+    { id: 4, name: 'Jean Pierre', role: 'Simba Procurement', email: 'jp.procure@simba.com', phone: '+250 788 111 222', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&h=150&auto=format&fit=crop', company: 'Simba SuperMarket' },
+    { id: 5, name: 'Marie Mutoni', role: 'Simba Quality Control', email: 'm.mutoni@simba.com', phone: '+250 788 333 444', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=150&h=150&auto=format&fit=crop', company: 'Simba SuperMarket' },
 ];
 
 export default function TeamPage() {
