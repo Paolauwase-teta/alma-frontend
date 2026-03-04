@@ -48,13 +48,13 @@ export default function AnalyticsPage() {
 
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="space-y-1">
-                    <h2 className="text-3xl font-black text-slate-900 tracking-tight">Molecular Intelligence</h2>
-                    <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Real-time Freshess Monitoring & Prediction</p>
+                    <h2 className="text-3xl font-black text-[var(--foreground)] tracking-tight">Molecular Intelligence</h2>
+                    <p className="text-[var(--muted-foreground)] font-bold uppercase tracking-widest text-[10px]">Real-time Freshness Monitoring & Prediction</p>
                 </div>
                 <div className="flex gap-3">
                     <button
                         onClick={handleDateRange}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-slate-100 text-slate-600 rounded-2xl text-[12px] font-black uppercase tracking-wider hover:border-green-500 transition-all active:scale-95"
+                        className="flex items-center gap-2 px-4 py-2.5 bg-[var(--card)] border-2 border-[var(--border)] text-[var(--muted-foreground)] rounded-2xl text-[12px] font-black uppercase tracking-wider hover:border-green-500 transition-all active:scale-95"
                     >
                         <Calendar size={16} />
                         {dateRange}
@@ -76,32 +76,32 @@ export default function AnalyticsPage() {
                     { label: "Current VOC Level", value: "18 ppm", change: "Safe", icon: Shield, color: "text-slate-600" },
                     { label: "Critical Alerts", value: "2", change: "-50%", icon: ArrowDownRight, color: "text-red-600" }
                 ].map((stat, i) => (
-                    <div key={i} className="bg-white p-6 rounded-[32px] border-2 border-slate-50 shadow-sm hover:shadow-xl transition-all group">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{stat.label}</p>
-                        <h3 className="text-3xl font-black text-slate-900 mb-2 tracking-tighter">{stat.value}</h3>
+                    <div key={i} className="bg-[var(--card)] p-6 rounded-[32px] border-2 border-[var(--border)] shadow-sm hover:shadow-xl transition-all group">
+                        <p className="text-[10px] font-black text-[var(--muted-foreground)] uppercase tracking-widest mb-3">{stat.label}</p>
+                        <h3 className="text-3xl font-black text-[var(--foreground)] mb-2 tracking-tighter">{stat.value}</h3>
                         <div className={`flex items-center gap-1 text-[11px] font-black uppercase ${stat.color}`}>
                             <span>{stat.change}</span>
-                            <span className="text-slate-300 font-bold ml-1">Today</span>
+                            <span className="text-[var(--muted-foreground)] opacity-50 font-bold ml-1">Today</span>
                         </div>
                     </div>
                 ))}
             </div>
 
             <div className="grid lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 bg-white p-10 rounded-[40px] border-2 border-slate-50 shadow-sm">
+                <div className="lg:col-span-2 bg-[var(--card)] p-10 rounded-[40px] border-2 border-[var(--border)] shadow-sm">
                     <div className="flex justify-between items-start mb-10">
                         <div>
-                            <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Molecular Freshness Index</h3>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Real-time VOC concentration vs Baseline</p>
+                            <h3 className="text-xl font-black text-[var(--foreground)] uppercase tracking-tight">Molecular Freshness Index</h3>
+                            <p className="text-[10px] font-black text-[var(--muted-foreground)] uppercase tracking-widest">Real-time VOC concentration vs Baseline</p>
                         </div>
                         <div className="flex gap-4">
                             <div className="flex items-center gap-2">
                                 <div className="w-3 h-3 rounded-full bg-[#15803d]"></div>
-                                <span className="text-[10px] font-black uppercase text-slate-500">Predicted Freshness</span>
+                                <span className="text-[10px] font-black uppercase text-[var(--muted-foreground)]">Predicted Freshness</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-3 h-3 rounded-full bg-[#f97316]"></div>
-                                <span className="text-[10px] font-black uppercase text-slate-500">Decay Markers</span>
+                                <span className="text-[10px] font-black uppercase text-[var(--muted-foreground)]">Decay Markers</span>
                             </div>
                         </div>
                     </div>
@@ -118,11 +118,19 @@ export default function AnalyticsPage() {
                                         <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
-                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 900, fill: '#94a3b8' }} />
-                                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 900, fill: '#94a3b8' }} />
-                                <CartesianGrid strokeDasharray="10 10" vertical={false} stroke="#f1f5f9" />
+                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 900, fill: 'var(--muted-foreground)' }} />
+                                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 900, fill: 'var(--muted-foreground)' }} />
+                                <CartesianGrid strokeDasharray="10 10" vertical={false} stroke="var(--border)" />
                                 <Tooltip
-                                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', fontSize: '12px', fontWeight: '900' }}
+                                    contentStyle={{
+                                        borderRadius: '16px',
+                                        border: 'none',
+                                        boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                                        fontSize: '12px',
+                                        fontWeight: '900',
+                                        backgroundColor: 'var(--card)',
+                                        color: 'var(--foreground)'
+                                    }}
                                 />
                                 <Area type="monotone" dataKey="prevented" stroke="#15803d" strokeWidth={4} fillOpacity={1} fill="url(#colorSpoilage)" />
                                 <Area type="monotone" dataKey="vocLevel" stroke="#f97316" strokeWidth={4} fillOpacity={1} fill="url(#colorVOC)" />
@@ -131,9 +139,9 @@ export default function AnalyticsPage() {
                     </div>
                 </div>
 
-                <div className="bg-white p-10 rounded-[40px] border-2 border-slate-50 shadow-sm">
-                    <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-2">Inventory Health</h3>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-10">Current stock condition status</p>
+                <div className="bg-[var(--card)] p-10 rounded-[40px] border-2 border-[var(--border)] shadow-sm">
+                    <h3 className="text-xl font-black text-[var(--foreground)] uppercase tracking-tight mb-2">Inventory Health</h3>
+                    <p className="text-[10px] font-black text-[var(--muted-foreground)] uppercase tracking-widest mb-10">Current stock condition status</p>
                     <div className="h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
@@ -151,7 +159,15 @@ export default function AnalyticsPage() {
                                     ))}
                                 </Pie>
                                 <Tooltip
-                                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', fontSize: '10px', fontWeight: '900' }}
+                                    contentStyle={{
+                                        borderRadius: '16px',
+                                        border: 'none',
+                                        boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                                        fontSize: '10px',
+                                        fontWeight: '900',
+                                        backgroundColor: 'var(--card)',
+                                        color: 'var(--foreground)'
+                                    }}
                                 />
                                 <Legend
                                     iconType="circle"
@@ -165,6 +181,7 @@ export default function AnalyticsPage() {
                     </div>
                 </div>
             </div>
+
         </div>
     );
 }

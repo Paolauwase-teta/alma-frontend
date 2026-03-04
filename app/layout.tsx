@@ -15,17 +15,26 @@ export const metadata: Metadata = {
   description: "Science-based food spoilage detection and food management system reducing waste using IoT and AI.",
 };
 
+import { ThemeProvider } from "@/app/components/ThemeProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={jost.variable}>
-      <body>
-        <LayoutWrapper>
-          {children}
-        </LayoutWrapper>
+    <html lang="en" className={jost.variable} suppressHydrationWarning>
+      <body className="antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );

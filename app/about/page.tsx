@@ -7,7 +7,7 @@ import { Leaf, Globe, Target, Users, ShieldCheck, ArrowRight, BarChart3, Sprout,
 export default function AboutPage() {
     const [counts, setCounts] = useState([0, 0, 0, 0]);
     const targetStats = [50420, 35.2, 1248, 99.9];
-    
+
     const [accuracy, setAccuracy] = useState(0);
     const targetAccuracy = 94.2;
 
@@ -20,7 +20,7 @@ export default function AboutPage() {
         const timer = setInterval(() => {
             currentStep++;
             const progress = currentStep / steps;
-            
+
             setCounts(targetStats.map(target => {
                 const val = target * progress;
                 return target % 1 === 0 ? Math.floor(val) : parseFloat(val.toFixed(1));
@@ -59,7 +59,7 @@ export default function AboutPage() {
     ];
 
     return (
-        <div className="bg-white min-h-screen font-[family-name:var(--font-jost)] relative overflow-hidden">
+        <div className="bg-[var(--background)] min-h-screen font-[family-name:var(--font-jost)] relative overflow-hidden">
             {/* Background Grain/Noise for premium feel */}
             <div className="fixed inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] z-50"></div>
 
@@ -88,11 +88,11 @@ export default function AboutPage() {
             </section>
 
             {/* Our Philosophy Grid */}
-            <section className="px-6 py-32 bg-white relative z-10">
+            <section className="px-6 py-32 bg-[var(--background)] relative z-10">
                 <div className="max-w-6xl mx-auto">
                     <div className="text-left mb-20 space-y-4">
                         <span className="text-xs font-black text-[#0a4a34] uppercase tracking-[0.5em]">Our Philosophy</span>
-                        <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-none uppercase">ROOTED IN <span className="text-[#0a4a34]">SCIENCE</span>,<br />DRIVEN BY PURPOSE.</h2>
+                        <h2 className="text-4xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-none uppercase">ROOTED IN <span className="text-[#0a4a34]">SCIENCE</span>,<br />DRIVEN BY PURPOSE.</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -116,12 +116,12 @@ export default function AboutPage() {
                                 color: "bg-green-50 text-green-600"
                             }
                         ].map((item, i) => (
-                            <div key={i} className="group p-10 rounded-[40px] border border-slate-100 bg-white hover:border-green-200 hover:shadow-2xl transition-all duration-500 flex flex-col items-start h-full">
+                            <div key={i} className="group p-10 rounded-[40px] border border-[var(--border)] bg-[var(--card)] hover:border-green-200 hover:shadow-2xl transition-all duration-500 flex flex-col items-start h-full">
                                 <div className={`w-16 h-16 ${item.color} rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
                                     <item.icon size={28} />
                                 </div>
-                                <h3 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">{item.title}</h3>
-                                <p className="text-slate-500 text-base font-medium leading-relaxed">{item.desc}</p>
+                                <h3 className="text-2xl font-black text-[var(--foreground)] mb-4 uppercase tracking-tight">{item.title}</h3>
+                                <p className="text-[var(--muted-foreground)] text-base font-medium leading-relaxed">{item.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -129,7 +129,7 @@ export default function AboutPage() {
             </section>
 
             {/* High-Tech Section - Refined Deep Green */}
-            <section className="px-6 py-24 bg-white relative">
+            <section className="px-6 py-24 bg-[var(--background)] relative">
                 <div className="max-w-6xl mx-auto">
                     <div className="bg-[#05150e] border border-green-500/10 rounded-[60px] p-8 md:p-16 flex flex-col lg:flex-row items-center gap-16 relative overflow-hidden shadow-2xl">
                         {/* Decorative Glow */}
@@ -183,23 +183,23 @@ export default function AboutPage() {
             </section>
 
             {/* Impact Section - White Version */}
-            <section className="px-6 py-32 bg-white border-y border-slate-100 relative z-10">
+            <section className="px-6 py-32 bg-[var(--background)] border-y border-[var(--border)] relative z-10">
                 <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
                     <div className="inline-flex items-center px-8 py-3 bg-[#0a4a34] text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.4em] shadow-xl shadow-green-900/20 mb-10">
                         GLOBAL IMPACT
                     </div>
-                    <h2 className="text-4xl md:text-6xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-16 uppercase italic-none">
+                    <h2 className="text-4xl md:text-6xl font-black text-[var(--foreground)] leading-[1.1] tracking-tighter mb-16 uppercase italic-none">
                         Protecting Our <span className="text-[#0a4a34]">Ecosystem.</span>
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-12 w-full">
                         {counts.map((count, i) => (
                             <div key={i} className="flex flex-col items-center group cursor-default">
-                                <span className="text-5xl font-black text-slate-900 tracking-tighter mb-2 group-hover:text-[#0a4a34] transition-colors uppercase tabular-nums">
+                                <span className="text-5xl font-black text-[var(--foreground)] tracking-tighter mb-2 group-hover:text-[#0a4a34] transition-colors uppercase tabular-nums">
                                     {i === 0 ? count.toLocaleString() : count}{statLabels[i].suffix}
                                 </span>
                                 <span className="text-[10px] font-black text-[#0a4a34] uppercase tracking-[0.3em] mb-1">{statLabels[i].label}</span>
-                                <span className="text-slate-500 text-[10px] font-medium uppercase tracking-widest">{statLabels[i].sub}</span>
+                                <span className="text-[var(--muted-foreground)] text-[10px] font-medium uppercase tracking-widest">{statLabels[i].sub}</span>
                             </div>
                         ))}
                     </div>
@@ -207,7 +207,7 @@ export default function AboutPage() {
             </section>
 
             {/* CTA Section - Sophisticated Deep Green (Not bright) */}
-            <section className="py-32 px-6 bg-white">
+            <section className="py-32 px-6 bg-[var(--background)]">
                 <div className="max-w-6xl mx-auto bg-[#05150e] border border-green-500/10 rounded-[60px] p-12 md:p-24 text-center space-y-10 relative overflow-hidden isolate shadow-2xl">
                     <h2 className="text-4xl md:text-6xl font-black text-white leading-none tracking-tighter uppercase italic-none">
                         Ready to protect <br /> your ecosystem?

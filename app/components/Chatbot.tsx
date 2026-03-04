@@ -53,17 +53,17 @@ export default function Chatbot() {
             let response = "";
 
             if (query.includes("what is alma")) {
-                response = "ALMA is a cutting-edge food management ecosystem that combines molecular intelligence, IoT sensors, and blockchain technology to eliminate food waste from farm to fork.";
+                response = "ALMA is a deep-tech agricultural ecosystem that uses molecular sensing and AI to eliminate food waste. We provide a 'digital nose' for the supply chain, combined with blockchain for immutable transparency.";
             } else if (query.includes("problem") || query.includes("solve")) {
-                response = "We tackle the global 1.3 billion ton food waste crisis. Specifically, we solve the 'invisible' spoilage problem where food looks fine but is degrading at a molecular level, and we bridge the gap between surplus and community need.";
+                response = "We solve the 'invisible spoilage' problem—where food looks fine but is degrading chemically. We also tackle the massive logistics inefficiency that causes 1.3B tons of food to be wasted annually while millions go hungry.";
             } else if (query.includes("feature")) {
-                response = "Our key features include: 1. Molecular Freshness Sensors (tracking VOCs), 2. Live Blockchain Ledger (for transparency), 3. AI Predictive Analytics (forecasting exact spoilage windows), and 4. Smart USSD Alerts for farmers.";
+                response = "Key features include: 1. VOC Sensing (detecting spoilage days early), 2. AI Predictive Analytics (forecasting shelf-life with 94.2% accuracy), 3. Blockchain Audit Trails, and 4. Automated Redistribution for surplus food.";
             } else if (query.includes("service")) {
-                response = "We provide four core services: Smart Storage Monitoring for farms, Food Delivery Tracking for logistics, Household Prep-smart Management, and an automated Food Donation System.";
-            } else if (query.includes("post storage") || query.includes("prevent")) {
-                response = "We prevent storage loss by monitoring Volatile Organic Compounds (VOCs). Traditional sensors only check temp/humidity, but ALMA 'smells' the food ripening or degrading days before physical signs appear, triggering instant alerts to move the product.";
+                response = "Our services cover the whole chain: 'Molecular Sensing' for warehouses, 'Predictive Logistics' for transporters, 'Blockchain Ledgers' for retailers, and 'Redistribution Engines' for NGOs and community kitchens.";
+            } else if (query.includes("post storage") || query.includes("prevention") || query.includes("how does it prevent")) {
+                response = "ALMA prevents post-storage loss by detecting Ethylene and Volatile Organic Compounds (VOCs) at 10ppb (parts per billion). By 'smelling' the start of decay before humans can see it, we trigger immediate re-routing or sales before the food actually spoils.";
             } else if (query.includes("better") || query.includes("traditional")) {
-                response = "Traditional methods are reactive (throwing food away after it smells bad). ALMA is proactive. We use molecular data to give food a 'digital life' and transparency that old-school cold storage simply cannot match.";
+                response = "Traditional methods are reactive—you wait for food to look or smell bad, then throw it away. ALMA is proactive. We use real-time chemical data to move food while it's still fresh, ensuring 30%+ less waste than standard cold storage systems.";
             } else {
                 const genericResponses = [
                     "That's a great question. Our blockchain-verified data ensures 100% transparency in the supply chain.",
@@ -106,7 +106,7 @@ export default function Chatbot() {
 
             {/* Chat Window */}
             {isOpen && (
-                <div className="fixed bottom-24 right-6 z-50 w-96 h-[500px] bg-white rounded-3xl shadow-2xl border border-[#1a3a2e]/10 flex flex-col overflow-hidden animate-scale-in origin-bottom-right">
+                <div className="fixed bottom-24 right-6 z-50 w-96 h-[500px] bg-[var(--card)] rounded-3xl shadow-2xl border border-[var(--border)] flex flex-col overflow-hidden animate-scale-in origin-bottom-right">
                     {/* Header */}
                     <div className="bg-gradient-to-r from-[#1a3a2e] to-[#4a7c59] p-4 flex items-center gap-3">
                         <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -122,7 +122,7 @@ export default function Chatbot() {
                     </div>
 
                     {/* Messages Area */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[var(--muted)]">
                         {messages.map((msg) => (
                             <div
                                 key={msg.id}
@@ -136,7 +136,7 @@ export default function Chatbot() {
                                     <div
                                         className={`p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.sender === 'user'
                                             ? 'bg-[#1a3a2e] text-white rounded-br-none'
-                                            : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'
+                                            : 'bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] rounded-bl-none'
                                             }`}
                                     >
                                         {msg.text}
@@ -150,7 +150,7 @@ export default function Chatbot() {
                                     <div className="w-6 h-6 rounded-full bg-[#4a7c59] flex items-center justify-center shrink-0">
                                         <Sparkles size={12} className="text-white" />
                                     </div>
-                                    <div className="bg-white border border-gray-100 p-3 rounded-2xl rounded-bl-none shadow-sm">
+                                    <div className="bg-[var(--card)] border border-[var(--border)] p-3 rounded-2xl rounded-bl-none shadow-sm">
                                         <div className="flex gap-1">
                                             <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
                                             <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></span>
@@ -164,14 +164,14 @@ export default function Chatbot() {
                     </div>
 
                     {/* Input Area */}
-                    <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-gray-100">
+                    <form onSubmit={handleSendMessage} className="p-4 bg-[var(--card)] border-t border-[var(--border)]">
                         <div className="relative">
                             <input
                                 type="text"
                                 value={inputText}
                                 onChange={(e) => setInputText(e.target.value)}
                                 placeholder="Ask about our technology..."
-                                className="w-full pl-4 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#4a7c59] focus:bg-white transition-all text-sm"
+                                className="w-full pl-4 pr-12 py-3 bg-[var(--muted)] border border-[var(--border)] rounded-xl focus:outline-none focus:border-[#4a7c59] focus:bg-[var(--card)] transition-all text-[var(--foreground)] text-sm"
                             />
                             <button
                                 type="submit"
@@ -182,7 +182,7 @@ export default function Chatbot() {
                             </button>
                         </div>
                         <div className="text-center mt-2">
-                            <p className="text-[10px] text-gray-400">
+                            <p className="text-[10px] text-[var(--muted-foreground)]">
                                 Powered by Blockchain & Advanced AI
                             </p>
                         </div>
