@@ -71,28 +71,28 @@ export default function HomePage() {
                   num: 1,
                   title: "Smart Storage Monitoring",
                   desc: "Precision sensors for molecular freshness tracking at origin farms.",
-                  img: "/molecular_sensing_service_1772604196407.png",
+                  img: "/smart_storage.png",
                   offset: "lg:-translate-y-16"
                 },
                 {
                   num: 2,
                   title: "Food Delivery Tracking",
                   desc: "Real-time monitoring of perishable goods throughout the delivery chain for peak quality.",
-                  img: "/food_delivery_tracking_service_1772696134738.png",
+                  img: "/smart_logistics.png",
                   offset: "lg:translate-y-16"
                 },
                 {
                   num: 3,
                   title: "Household Management",
                   desc: "Bringing molecular intelligence to every home kitchen for zero waste.",
-                  img: "/household_management_service_alma_1772696231430.png",
+                  img: "/smart_kitchen.png",
                   offset: "lg:-translate-y-16"
                 },
                 {
                   num: 4,
                   title: "Food Donation System",
                   desc: "Bridging the gap securely between surplus inventory and communities in need.",
-                  img: "/community_surplus_sharing_1772604308410.png",
+                  img: "/food_donation.png",
                   offset: "lg:translate-y-16"
                 }
               ].map((s, i) => (

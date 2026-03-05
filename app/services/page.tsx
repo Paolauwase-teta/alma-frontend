@@ -10,28 +10,28 @@ export default function ServicesPage() {
             title: "Molecular Freshness Sensing",
             subtitle: "CHEMICAL INTELLIGENCE",
             desc: "ALMA's proprietary gaseous sensor arrays detect the earliest chemical precursors to spoilage—Volatile Organic Compounds (VOCs) and Ethylene—at sub-nanoparticle concentrations (up to 10ppb). This allows for intervention days before visible decay occurs.",
-            img: "/molecular_sensing_service_1772604196407.png",
+            img: "/smart_storage.png",
             features: ["Gaseous Trace Detection", "Zero-Contact Scanning", "99.4% Precision Rate"]
         },
         {
             title: "Blockchain Condition Ledger",
             subtitle: "IMMUTABLE AUDIT TRAIL",
             desc: "Every environmental data point—temperature, humidity, atmospheric composition—is cryptographically hashed and recorded to a secure blockchain ledger. This creates an unalterable history of the shipment's integrity from origin to retail shelf.",
-            img: "/blockchain_logistics_service_1772604233837.png",
+            img: "/smart_logistics.png",
             features: ["SHA-256 Data Integrity", "Smart Patent Tracking", "Transparent Origin Verification"]
         },
         {
             title: "Automated Logistics Hub",
             subtitle: "PREDICTIVE DISTRIBUTION",
             desc: "Our neural networks process real-time freshness data to dynamically re-route inventory. If a batch is maturing faster than expected, ALMA automatically identifies the nearest high-demand market to ensure zero waste and maximum profit.",
-            img: "/automated_warehouse_hub_1772604286980.png",
+            img: "/smart_logistics.png",
             features: ["Real-time Route Optimization", "Demand Forecasting", "Warehouse Automation Integration"]
         },
         {
             title: "Community Surplus Sharing",
             subtitle: "SOCIAL IMPACT ENGINE",
             desc: "When produce reaches a critical shelf-life threshold and cannot be sold in traditional retail, ALMA's system triggers an immediate alert to a local network of food banks and community kitchens for rapid redistribution.",
-            img: "/community_surplus_sharing_1772604308410.png",
+            img: "/food_donation.png",
             features: ["Automated Charity Matching", "Tax-Incentive Logging", "Rapid Logistics Response"]
         }
     ];
@@ -101,23 +101,7 @@ export default function ServicesPage() {
                         </div>
                     </div>
 
-                    <div className="relative hidden lg:block">
-                        <div className="relative z-10 rounded-[60px] overflow-hidden border border-[var(--border)] shadow-2xl">
-                            <img
-                                src="/molecular_tech_detail_1772604570463.png"
-                                alt="ALMA Technology Detail"
-                                className="w-full h-auto object-cover scale-110"
-                            />
-                            {/* Overlay UI elements - Keep dark for tech feel */}
-                            <div className="absolute top-10 right-10 p-6 bg-black/80 backdrop-blur-xl border border-white/10 rounded-3xl space-y-2">
-                                <div className="flex items-center gap-2 text-green-400">
-                                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                    <span className="text-[10px] font-black uppercase tracking-widest">Sensor Node Active</span>
-                                </div>
-                                <p className="text-white text-lg font-black tracking-tighter uppercase tabular-nums">VOC Detected: 12ppb</p>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </section>
 

@@ -206,6 +206,33 @@ export default function AboutPage() {
                 </div>
             </section>
 
+            {/* Meet the Innovators */}
+            <section className="px-6 py-32 bg-[var(--background)] relative z-10">
+                <div className="max-w-6xl mx-auto">
+                    <div className="text-left mb-20 space-y-4">
+                        <span className="text-xs font-black text-[#0a4a34] uppercase tracking-[0.5em]">The Team</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-none uppercase">MEET THE <span className="text-[#0a4a34]">INNOVATORS</span>.</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {[
+                            { name: "Alice Chen", role: "Chief Scientist", img: "/alice.png", bio: "Molecular biologist specialized in gas signatures." },
+                            { name: "Bob Richards", role: "Logistics Lead", img: "/bob.png", bio: "Expert in global cold-chain infrastructure." },
+                            { name: "Charlie Okafor", role: "Software Architect", img: "/charlie.png", bio: "Pioneer in agricultural blockchain transparency." }
+                        ].map((member, i) => (
+                            <div key={i} className="group p-10 rounded-[40px] border border-[var(--border)] bg-[var(--card)] hover:border-green-200 hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center">
+                                <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-[var(--border)] mb-8 shadow-inner group-hover:border-green-500/20 transition-colors">
+                                    <img src={member.img} alt={member.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                                </div>
+                                <h3 className="text-2xl font-black text-[var(--foreground)] mb-2 uppercase tracking-tight">{member.name}</h3>
+                                <span className="text-[10px] font-black text-[#0a4a34] uppercase tracking-[0.3em] mb-4 block">{member.role}</span>
+                                <p className="text-[var(--muted-foreground)] text-base font-medium leading-relaxed">{member.bio}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* CTA Section - Sophisticated Deep Green (Not bright) */}
             <section className="py-32 px-6 bg-[var(--background)]">
                 <div className="max-w-6xl mx-auto bg-[#05150e] border border-green-500/10 rounded-[60px] p-12 md:p-24 text-center space-y-10 relative overflow-hidden isolate shadow-2xl">
